@@ -7,6 +7,11 @@ export class UsersService {
     // Arrya para ser populado
     private users: User[] = [];
 
+    // Função findAll()
+    findAll(): User[] {
+        return this.users;
+    }
+
     // Função do create()
     create(user: User): User {
         this.users.push(user);
