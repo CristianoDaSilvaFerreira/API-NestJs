@@ -1,73 +1,151 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
+# App NestJs
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Installation
-
-```bash
-$ npm install
+## Criando o projeto
+* Para criação do projeto, será necessário seguir os seguintes passos:
+> criando o projeto 
+```js
+nest new project
 ```
 
-## Running the app
-
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+> Adicionando o `module users`
+```js
+nest g module users
 ```
 
-## Test
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+> Adicionando o `controller user`
+```js
+nest g controller users
 ```
 
-## Support
+> Adicionando o `service users`
+```js
+nest g service users
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## Criando rodas
+> create
 
-## Stay in touch
+Para a criação das rotas, dentro do `users.controller` usa o decorention `@Post()` para ter acesso ao método de criação. Criando uma interface dos dados
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### Openapi
+> Instalação do swagger e swagger-ui-express
 
-## License
+Serve para o usuário estar testando a aplicação sem uso de outra ferramenta com o Insomnia
 
-Nest is [MIT licensed](LICENSE).
+```js
+npm install --save @nestjs/swagger swagger-ui-express
+```
+
+ou
+```js
+yarn add npm @nestjs/swagger swagger-ui-express
+```
+
+> Configuração
+Dentro do `main.ts` configura e fazer as importações necessárias
+```js
+const config = new DocumentBuilder()
+    .setTitle('Cats example')
+    .setDescription('The cats API description')
+    .setVersion('1.0')
+    .addTag('cats')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
+```
+
+## Banco de Dados SQLite
+> Instalando 
+
+Para fazer uso do banco de dados é simples, basta usar o comando abaixo, nesse caso será usado o SQLite
+```js
+npm install --save @nestjs/typeorm typeorm sqlite3
+```
+
+Ou simplesmente
+```js
+yarn add npm @nestjs/typeorm typeorm sqlite3
+```
+
+> Configurando
+
+Para ter acesso as configurações do banco de dados
+```js
+@Module({
+  imports: [UsersModule],
+  imports: [
+    UsersModule,
+    TypeOrmModule.forRoot({
+      type: 'sqlite',
+      database: 'db',
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      synchronize: true,
+    })
+  ],
+  controllers: [AppController],
+  providers: [AppService],
+})
+```
+
+- `src > users > database > user.entity.ts`
+
+```js
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+
+@Entity()
+export class UserEntity {
+    
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    @Column()
+    name: string;
+
+    @Column()
+    email: string;
+
+    @Column()
+    password: string;
+
+    @Column()
+    phone: string;
+}
+```
+
+## Banco de dados PostgreSQL + Docker
+> Criando a imagem no Docker
+
+```js
+docker run --name postgres -e POSTGRES_PASSWORD=docker -p 5432:5432 -d postgres
+```
+
+> Instalando a biblioteca do Postgres
+
+```js 
+yarn add pg
+```
+
+> Criando o modulo do banco de dados
+
+```bash
+nest g module database
+```
+
+> Configurando
+
+- src > database > database.module.ts
+
+```js
+@Module({
+    imports: [TypeOrmModule.forRoot({
+        type: 'postgres',
+        host: 'localhost',
+        username: 'postgres',
+        password: 'docker',
+        database: 'user',
+        entities: [UserEntity],
+        synchronize: true,
+      }),]
+})
+```
+
