@@ -647,6 +647,15 @@
   resolved "https://registry.yarnpkg.com/@nestjs/mapped-types/-/mapped-types-1.0.1.tgz#78b62041c7a407db4a90eb140567321602bed18e"
   integrity sha512-NFvofzSinp00j5rzUd4tf+xi9od6383iY0JP7o0Bnu1fuItAUkWBgc4EKuIQ3D+c2QI3i9pG1kDWAeY27EMGtg==
 
+"@nestjs/microservices@^8.2.6":
+  version "8.2.6"
+  resolved "https://registry.yarnpkg.com/@nestjs/microservices/-/microservices-8.2.6.tgz#ed24c360d627d6f04e9c938775fcf077af25e060"
+  integrity sha512-2RxUESoOKveqfs0k57a+EX5Yr3rdwsKXNr7KrO9oseqJvSJPYLyE8MoYUjEAsGHWIeymdLzZwag047kIVBX7eg==
+  dependencies:
+    iterare "1.2.1"
+    json-socket "0.3.0"
+    tslib "2.3.1"
+
 "@nestjs/platform-express@^8.0.0":
   version "8.2.6"
   resolved "https://registry.yarnpkg.com/@nestjs/platform-express/-/platform-express-8.2.6.tgz#48ab8741776dbb7dd5204a401151bf21e06bb503"
@@ -3726,6 +3735,11 @@ json-schema@0.4.0:
   resolved "https://registry.yarnpkg.com/json-schema/-/json-schema-0.4.0.tgz#f7de4cf6efab838ebaeb3236474cbba5a1930ab5"
   integrity sha512-es94M3nTIfsEPisRafak+HDLfHXnKBhV3vU5eqPcS3flIWqcxJWgXHXiey3YrpaNsanY5ei1VoYEbOzijuq9BA==
 
+json-socket@0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/json-socket/-/json-socket-0.3.0.tgz#f4b953c685bb8e8bd0b72438f5208d9a0799ae07"
+  integrity sha512-jc8ZbUnYIWdxERFWQKVgwSLkGSe+kyzvmYxwNaRgx/c8NNyuHes4UHnPM3LUrAFXUx1BhNJ94n1h/KCRlbvV0g==
+
 json-stable-stringify-without-jsonify@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/json-stable-stringify-without-jsonify/-/json-stable-stringify-without-jsonify-1.0.1.tgz#9db7b59496ad3f3cfef30a75142d2d930ad72651"
@@ -3773,6 +3787,11 @@ jsprim@^1.2.2:
     extsprintf "1.3.0"
     json-schema "0.4.0"
     verror "1.10.0"
+
+kafkajs@^1.15.0:
+  version "1.15.0"
+  resolved "https://registry.yarnpkg.com/kafkajs/-/kafkajs-1.15.0.tgz#a5ada0d933edca2149177393562be6fb0875ec3a"
+  integrity sha512-yjPyEnQCkPxAuQLIJnY5dI+xnmmgXmhuOQ1GVxClG5KTOV/rJcW1qA3UfvyEJKTp/RTSqQnUR3HJsKFvHyTpNg==
 
 kleur@^3.0.3:
   version "3.0.3"
