@@ -1,3 +1,4 @@
+import { UserEntity } from './database/user.entity';
 import { UserDto } from './dtos/user.dto';
 import { UsersService } from './users.service';
 import { Body, Controller, Get, Post } from '@nestjs/common';
@@ -12,14 +13,14 @@ export class UsersController {
 
     // Rota de listar todos usuários
     @Get()
-    index(): User[] {
-        return this.userService.findAll();
+    async index(): Promise<UserEntity[]> {
+        return await this.userService.findAll();
     }
 
     // Rota de adiconar usuários
     @Post()
     @ApiBody({ type: UserDto })
-    create(@Body() user: UserDto): User {
-        return this.userService.create(user);
+    async create(@Body() user: UserDto): Promise<UserEntity> {
+        return await this.userService.create(user);
     }
 }
