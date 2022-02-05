@@ -1,6 +1,8 @@
+import { UserDto } from './dtos/user.dto';
 import { UsersService } from './users.service';
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { User } from './interface/user.interface';
+import { ApiBody } from '@nestjs/swagger';
 
 @Controller('users')
 export class UsersController {
@@ -16,7 +18,8 @@ export class UsersController {
 
     // Rota de adiconar usuários
     @Post()
-    create(@Body() user: User): User {
+    @ApiBody({ type: UserDto })
+    create(@Body() user: UserDto): User {
         return this.userService.create(user);
     }
 }
