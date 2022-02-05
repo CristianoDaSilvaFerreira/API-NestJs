@@ -149,3 +149,92 @@ nest g module database
 })
 ```
 
+## Configurando o Docker
+> Criar um arquivo `docker-compose.yml`
+
+Arquivo para as configurações do Docker-compose
+
+```js
+version: "3"
+services:
+  zookeeper:
+    image: wurstmeister/zookeeper:latest
+    ports:
+      - "2181:2181"
+  kafka:
+    image: wurstmeister/kafka:2.11-1.1.0
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: localhost
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CREATE_TOPICS: "create-user:1:1, find-all-user:1:1"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+```
+
+> Verificando o status do contêiner 
+
+```bash
+docker ps
+```
+
+Ou
+
+```bash
+docker ps -a
+```
+
+> Levantando o sistema do Postgres
+
+```bash
+docker start postgres
+```
+
+> Baixando as configurações do `docker-compose.yml`
+
+```bash
+docker-compose up -d
+```
+
+> Configurando os `Microservices & Kafkajs`
+
+```bash
+yarn add @nestjs/microservices kafkajs
+```
+
+## Configurando o service do kafka
+
+```js
+@Controller('users')
+export class UsersController implements OnModuleInit {
+
+    // Configurando o Client de conexão com o Kafka
+    @Client({
+        transport: Transport.KAFKA,
+        options: {
+            client: {
+                clientId: 'user',
+                brokers: ['localhost:9092'],
+            },
+            consumer: {
+                groupId: 'user-consumer',
+                allowAutoTopicCreation: true
+            }
+        }
+    })
+
+    private client: ClientKafka;
+
+    async onModuleInit() {
+        const requestPatters = [
+            'find-all-user',
+            'create-user'
+        ];
+
+        requestPatters.forEach(async pattern => {
+            this.client.subscribeToResponseOf(pattern);
+            await this.client.connect();
+        })
+    }
+```
