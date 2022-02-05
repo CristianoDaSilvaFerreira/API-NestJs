@@ -87,7 +87,8 @@ Para ter acesso as configurações do banco de dados
 })
 ```
 
-* `src > users > database > user.entity.ts`
+- `src > users > database > user.entity.ts`
+
 ```js
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
@@ -129,3 +130,22 @@ yarn add pg
 ```bash
 nest g module database
 ```
+
+> Configurando
+
+- src > database > database.module.ts
+
+```js
+@Module({
+    imports: [TypeOrmModule.forRoot({
+        type: 'postgres',
+        host: 'localhost',
+        username: 'postgres',
+        password: 'docker',
+        database: 'user',
+        entities: [UserEntity],
+        synchronize: true,
+      }),]
+})
+```
+
