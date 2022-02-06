@@ -1,8 +1,27 @@
+import { UserEntity } from './interfaces/user.entity';
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { User } from './interfaces/user.interface';
 
 @Injectable()
 export class AppService {
-  getHello(): string {
-    return 'Hello World!';
+  constructor(
+    @InjectRepository(UserEntity)
+    private userRepository: Repository<UserEntity>,
+  ) {}
+
+  // Arrya para ser populado
+  private users: User[] = [];
+
+  // Função findAll()
+  async findAll(): Promise<UserEntity[]> {
+    return await this.userRepository.find();
+  }
+
+  // Função do create()
+  async create(user: User): Promise<UserEntity> {
+    return await this.userRepository.save(user);
+    
   }
 }
