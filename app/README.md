@@ -238,3 +238,13 @@ export class UsersController implements OnModuleInit {
         })
     }
 ```
+
+## Configurando o serviço de comunicação
+
+Para com que a comunicação do serviço do `Kafka` funcione corretamente entre o `app` e o `user-engine` é necessário seguir alguns passos:
+
+* Exclusão do `app db`;
+* Exclusão das importações que não estão sendo usadas;
+* Configurando o `interfaces > interface.user.ts`;
+* Exclusão do `users.services`;
+
