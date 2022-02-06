@@ -1,5 +1,5 @@
 import { UserDto } from './dtos/user.dto';
-import { Body, Controller, Get, OnModuleInit, Post } from '@nestjs/common';
+import { Body, Controller, Get, OnModuleInit, Param, Post } from '@nestjs/common';
 import { ApiBody } from '@nestjs/swagger';
 import { Client, ClientKafka, Transport } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
@@ -24,7 +24,7 @@ export class UsersController implements OnModuleInit {
   private client: ClientKafka;
 
   async onModuleInit() {
-    const requestPatters = ['find-all-user'];
+    const requestPatters = ['find-all-user', 'find-user'];
 
     requestPatters.forEach(async (pattern) => {
       this.client.subscribeToResponseOf(pattern);
@@ -36,6 +36,12 @@ export class UsersController implements OnModuleInit {
   @Get()
   index(): Observable<User[]> {
     return this.client.send('find-all-user', {});
+  }
+
+  // Rota de busca um usuários
+  @Get(':id')
+  find(@Param('id') id: number): Observable<User> {
+      return this.client.send('find-user', {id});
   }
 
   // Rota de adiconar usuários

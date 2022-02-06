@@ -19,6 +19,20 @@ export class AppService {
     return await this.userRepository.find();
   }
 
+  // Função findAll
+  async find(userId: number): Promise<User> {
+    const {id, name, email, password, phone} = await this.userRepository.findOne(userId);
+    const respose: User = {
+      id,
+      name,
+      email,
+      password, 
+      phone,
+    };
+
+    return respose;
+  }
+
   // Função do create()
   async create(user: User): Promise<UserEntity> {
     return await this.userRepository.save(user);
