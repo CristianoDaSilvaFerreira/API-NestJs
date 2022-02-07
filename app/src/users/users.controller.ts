@@ -1,13 +1,12 @@
-import { UserDto } from './dtos/user.dto';
-import { Body, Controller, Get, OnModuleInit, Param, Post } from '@nestjs/common';
-import { ApiBody } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, OnModuleInit, Param, Patch, Post, Put } from '@nestjs/common';
 import { Client, ClientKafka, Transport } from '@nestjs/microservices';
+import { ApiBody } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
+import { UserDto } from './dtos/user.dto';
 import { User } from './interfaces/user.interface';
 
 @Controller('users')
 export class UsersController implements OnModuleInit {
-  // Configurando o Client de conexão com o Kafka
   @Client({
     transport: Transport.KAFKA,
     options: {
@@ -17,37 +16,65 @@ export class UsersController implements OnModuleInit {
       },
       consumer: {
         groupId: 'user-consumer',
-        allowAutoTopicCreation: true,
-      },
-    },
+        allowAutoTopicCreation: true
+      }
+    }
   })
+
   private client: ClientKafka;
 
   async onModuleInit() {
-    const requestPatters = ['find-all-user', 'find-user'];
+    const requestPatters = ['find-all-user', 'find-user', 'create-user'];
 
-    requestPatters.forEach(async (pattern) => {
+    requestPatters.forEach(async pattern => {
       this.client.subscribeToResponseOf(pattern);
       await this.client.connect();
     });
-  }
+  }  
 
-  // Rota de listar todos usuários
   @Get()
   index(): Observable<User[]> {
     return this.client.send('find-all-user', {});
   }
 
-  // Rota de busca um usuários
   @Get(':id')
   find(@Param('id') id: number): Observable<User> {
-      return this.client.send('find-user', {id});
+    return this.client.send('find-user', {id})
   }
 
-  // Rota de adiconar usuários
   @Post()
   @ApiBody({ type: UserDto })
-  create(@Body() user: UserDto) {
-    return this.client.emit('create-user', user);
+  create(@Body() user: UserDto): Observable<User> {
+    return this.client.send('create-user', user);
   }
+
+  @Put(':id')
+  @ApiBody({ type: UserDto })
+  update(@Param('id') id: number, @Body() { name, email, phone, password }: UserDto) {
+    const payload = {
+      id,
+      name,
+      email,
+      phone,
+      password,
+    };
+
+    return this.client.emit('update-user', payload);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: number) {
+    return this.client.emit('delete-user', {id})
+  }
+
+  @Patch(':id/activate')
+  activate(@Param('id') id: number) {
+    return this.client.emit('activate-user', {id});
+  }
+
+  @Patch(':id/inactivate')
+  inactivate(@Param('id') id: number) {
+    return this.client.emit('inactivate-user', {id});
+  }
+
 }
