@@ -32,4 +32,14 @@ export class AppController {
   async delete(@Payload() data: any): Promise<void> {
     return this.appService.delete(Number(data.value.id));
   }
+
+  @MessagePattern('activate-user') 
+  async activate(@Payload() data: any): Promise<void> {
+    return this.appService.activate(Number(data.value.id));
+  }
+
+  @MessagePattern('inactivate-user') 
+  async inactivate(@Payload() data: any): Promise<void> {
+    return this.appService.inactivate(Number(data.value.id));
+  }
 }

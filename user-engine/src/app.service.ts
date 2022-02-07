@@ -6,25 +6,30 @@ import { User } from './interfaces/user.interface';
 
 @Injectable()
 export class AppService {
-  constructor(@InjectRepository(UserEntity) private userRepository: Repository<UserEntity>) {}
+  constructor(
+    @InjectRepository(UserEntity)
+    private userRepository: Repository<UserEntity>,
+  ) {}
 
   async findAll(): Promise<UserEntity[]> {
-    return await this.userRepository.find();
+    return await this.userRepository.find( { where: { status: 'ACTIVATE' }});
   }
 
   async find(userId: number): Promise<User> {
-    const {id, name,email, password, phone } = await this.userRepository.findOne(userId);
-    
-    if(!id) {
+    const { id, name, email, password, phone, status } =
+      await this.userRepository.findOne(userId);
+
+    if (!id) {
       throw new Error();
     }
-    
+
     const response: User = {
       id,
       name,
       email,
       phone,
       password,
+      status
     };
 
     return response;
@@ -47,14 +52,14 @@ export class AppService {
   }
 
   async delete(id: number): Promise<void> {
-    await this.userRepository.delete({id});
+    await this.userRepository.delete({ id });
   }
 
-  // async activate(id: number): Promise<void> {
-  //   await this.userRepository.update(id, { status: 'ACTIVATE' });
-  // }
+  async activate(id: number): Promise<void> {
+    await this.userRepository.update(id, { status: 'ACTIVATE' });
+  }
 
-  // async inactivate(id: number): Promise<void> {
-  //   await this.userRepository.update(id, { status: 'INACTIVATE' });
-  // }
+  async inactivate(id: number): Promise<void> {
+    await this.userRepository.update(id, { status: 'INACTIVATE' });
+  }
 }

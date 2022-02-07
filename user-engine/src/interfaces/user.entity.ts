@@ -17,4 +17,7 @@ export class UserEntity {
 
     @Column()
     phone: string;
+
+    @Column({ default: 'ACTIVATE' })
+    status: 'ACTIVATE' | 'INACTIVATE';
 }
