@@ -20,7 +20,7 @@ async function bootstrap() {
     }
   });
   await app.listen().then(() => {
-    logger.log('Notication-engine is running');
+    logger.log('user-engine is running');
   });
 }
 bootstrap();
