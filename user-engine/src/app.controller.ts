@@ -20,6 +20,13 @@ export class AppController {
     return this.appService.find(Number(data.value.id));
   }
 
+  @MessagePattern('create-user')
+  async create(@Payload() data: any): Promise<UserEntity> {
+    this.logger.log(`User: ${JSON.stringify(data)}`);
+
+    return await this.appService.create(data.value);
+  }
+
 
   @MessagePattern('update-user')
   async update(@Payload() data: any): Promise<void> {
